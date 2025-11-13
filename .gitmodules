@@ -1,6 +1,8 @@
 [submodule "docs"]
 	path = docs
 	url = git@github.com:Allisson95/ems-algashop-docs.git
+	branch = main
 [submodule "microservices/ordering"]
 	path = microservices/ordering
 	url = git@github.com:Allisson95/ems-algashop-ordering.git
+	branch = main
