@@ -1,2 +1,2 @@
 include:
-  - docker-compose.tools.yml
+  - docker-compose.tools.yaml
