@@ -14,3 +14,7 @@
 	path = microservices/product-catalog
 	url = git@github.com:allissonnunes/ems-algashop-product-catalog.git
 	branch = main
+[submodule "microservices/billing-scheduler"]
+	path = microservices/billing-scheduler
+	url = git@github.com:allissonnunes/ems-algashop-billing-scheduler.git
+	branch = main
