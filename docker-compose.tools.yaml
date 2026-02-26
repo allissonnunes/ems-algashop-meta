@@ -41,6 +41,7 @@ services:
       DATABASE_USERNAME: postgres
       DATABASE_PASSWORD: postgres
       SPRING_PROFILES_ACTIVE: docker
+      SPRING_FLYWAY_LOCATIONS: classpath:db/migration,classpath:db/testdata
     ports:
       - "9995:9995"
     depends_on:
