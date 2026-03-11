@@ -48,5 +48,27 @@ services:
       algashop-postgres:
         condition: service_healthy
 
+  algashop-mongodb:
+    image: mongo:8
+    restart: no
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: algashop
+    ports:
+      - "27017:27017"
+    volumes:
+      - algashop-mongodb:/data/db
+    healthcheck:
+      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
 volumes:
   algashop-postgres:
+  algashop-mongodb:
