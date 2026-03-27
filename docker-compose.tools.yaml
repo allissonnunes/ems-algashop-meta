@@ -61,7 +61,7 @@ services:
     volumes:
       - algashop-mongodb-1:/data/db
     healthcheck:
-      test: [ "CMD", "mongosh", "--port", "27017", "--eval", "db.adminCommand('ping')" ]
+      test: [ "CMD", "mongosh", "--quiet", "--port", "27017", "--eval", "db.adminCommand({ ping: 1 }).ok" ]
       interval: 10s
       timeout: 10s
       retries: 5
@@ -80,7 +80,7 @@ services:
     volumes:
       - algashop-mongodb-2:/data/db
     healthcheck:
-      test: [ "CMD", "mongosh", "--port", "27018", "--eval", "db.adminCommand('ping')" ]
+      test: [ "CMD", "mongosh", "--quiet", "--port", "27018", "--eval", "db.adminCommand({ ping: 1 }).ok" ]
       interval: 10s
       timeout: 10s
       retries: 5
@@ -99,7 +99,7 @@ services:
     volumes:
       - algashop-mongodb-3:/data/db
     healthcheck:
-      test: [ "CMD", "mongosh", "--port", "27019", "--eval", "db.adminCommand('ping')" ]
+      test: [ "CMD", "mongosh", "--quiet", "--port", "27019", "--eval", "db.adminCommand({ ping: 1 }).ok" ]
       interval: 10s
       timeout: 10s
       retries: 5
@@ -116,23 +116,26 @@ services:
       algashop-mongodb-3:
         condition: service_healthy
     entrypoint: [ "bash", "-c" ]
-    command: >
-      "
-      echo 'Initializing replica set...';
-      
-      mongosh --host algashop-mongodb-1 --eval '
-        rs.initiate({
-           _id: \"rs0\",
-           members: [
-             { _id: 0, host: \"host.docker.internal:27017\" },
-             { _id: 1, host: \"host.docker.internal:27018\" },
-             { _id: 2, host: \"host.docker.internal:27019\" }
-           ]
-        })
-      ' || true;
-      
-      mongosh --host algashop-mongodb-1 --eval 'printjson(rs.status())'
-      "
+    volumes:
+      - ./.docker/mongodb/init-replica-set.sh:/init-replica-set.sh
+    command: [ "/init-replica-set.sh" ]
+#    command: >
+#      "
+#      echo 'Initializing replica set...';
+#
+#      mongosh --host host.docker.internal --port 27017 --eval '
+#        rs.initiate({
+#           _id: \"rs0\",
+#           members: [
+#             { _id: 0, host: \"host.docker.internal:27017\" },
+#             { _id: 1, host: \"host.docker.internal:27018\" },
+#             { _id: 2, host: \"host.docker.internal:27019\" }
+#           ]
+#        })
+#      ' || true;
+#
+#      mongosh --host host.docker.internal --port 27017 --eval 'printjson(rs.status())'
+#      "
 
 volumes:
   algashop-postgres:
